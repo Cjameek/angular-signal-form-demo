@@ -25,20 +25,12 @@ export interface User {
         }
       }
     </fieldset>
+    
     <fieldset>
       <label for="lastName">Last Name</label>
       <input id="lastName" type="text" [control]="parentForm().user.lastName" />
       @if(parentForm().user.lastName().errors().length > 0 && parentForm().user.lastName().touched()){
         @for(error of parentForm().user.lastName().errors(); track $index) {
-          <small class="error">{{ error.message }}</small>
-        }
-      }
-    </fieldset>
-    <fieldset>
-      <label for="email">Email</label>
-      <input id="email" type="email" [control]="parentForm().user.email" />
-      @if(parentForm().user.email().errors().length > 0 && parentForm().user.email()){
-        @for(error of parentForm().user.email().errors(); track $index) {
           <small class="error">{{ error.message }}</small>
         }
       }
@@ -50,6 +42,16 @@ export interface User {
         <input id="middleInitial" type="text" [control]="parentForm().user.middleInitial" />
       </fieldset>
     }
+
+    <fieldset>
+      <label for="email">Email</label>
+      <input id="email" type="email" [control]="parentForm().user.email" />
+      @if(parentForm().user.email().errors().length > 0 && parentForm().user.email()){
+        @for(error of parentForm().user.email().errors(); track $index) {
+          <small class="error">{{ error.message }}</small>
+        }
+      }
+    </fieldset>
   </div>
   `,
   imports: [Control],

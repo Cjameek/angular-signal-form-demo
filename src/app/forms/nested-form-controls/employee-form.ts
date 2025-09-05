@@ -29,6 +29,7 @@ const employeeFormSchema = schema<EmployeeFormState>((path) => {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <form>
+
     <fieldset>
       <label for="employeeID">Employee ID #</label>
       <input id="employeeID" type="text" [control]="employeeForm.employeeID" />
@@ -39,30 +40,30 @@ const employeeFormSchema = schema<EmployeeFormState>((path) => {
       <input id="requireEmail" type="checkbox" [control]="employeeForm.requireEmail" />
     </div>
 
-    <nested-user-controls [parentForm]="employeeForm" />
-
-    @if(state().address){
-      <nested-address-controls [parentForm]="employeeForm" />
-    }
+    <div class="controls">
+      <nested-user-controls [parentForm]="employeeForm" />
+  
+      @if(state().address){
+        <nested-address-controls [parentForm]="employeeForm" />
+      }
+    </div>
 
     @if(employeeForm().errors().length > 0 && employeeForm().touched()){
-      @for(error of employeeForm().errors(); track $index) {
-        <small class="error">{{ error.message }}</small>
-      }
+      <p>
+        @for(error of employeeForm().errors(); track $index) {
+          <small class="error">{{ error.message }}</small>
+        }
+      </p>
     }
-
-    <pre>
-      Value: {{ employeeForm().value() | json }}
-
-      Valid: {{ employeeForm().valid() | json }}
-
-      Errors: {{ employeeForm().errors() | json }}
-    </pre>
 
     <div>
       <button type="button" (click)="toggleAddress()">Toggle Address Fields</button>
       <button type="button" (click)="toggleMiddleInitial()">Toggle Middle Initial Field</button>
     </div>
+
+    <pre>
+      Value: {{ employeeForm().value() | json }}
+    </pre>
   </form>
   `,
   imports: [Control, JsonPipe, NestedUserControls, NestedAddressControls],
