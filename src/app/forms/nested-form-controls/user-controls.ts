@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Control, Field } from '@angular/forms/signals';
 import { EmployeeFormState } from './employee-form';
 
@@ -17,7 +17,7 @@ export interface User {
     <p><strong>User Information</strong></p>
 
     <fieldset>
-      <label for="firstName">First Name</label>
+      <label for="firstName">First Name <small>(Required)</small></label>
       <input id="firstName" type="text" [control]="parentForm().user.firstName" />
       @if(parentForm().user.firstName().errors().length > 0 && parentForm().user.firstName().touched()){
         @for(error of parentForm().user.firstName().errors(); track $index) {
@@ -27,7 +27,7 @@ export interface User {
     </fieldset>
     
     <fieldset>
-      <label for="lastName">Last Name</label>
+      <label for="lastName">Last Name <small>(Required)</small></label>
       <input id="lastName" type="text" [control]="parentForm().user.lastName" />
       @if(parentForm().user.lastName().errors().length > 0 && parentForm().user.lastName().touched()){
         @for(error of parentForm().user.lastName().errors(); track $index) {
@@ -44,7 +44,7 @@ export interface User {
     }
 
     <fieldset>
-      <label for="email">Email</label>
+      <label for="email">Email @if(emailRequired()){ <small>(Required)</small> }</label>
       <input id="email" type="email" [control]="parentForm().user.email" />
       @if(parentForm().user.email().errors().length > 0 && parentForm().user.email()){
         @for(error of parentForm().user.email().errors(); track $index) {
@@ -58,4 +58,5 @@ export interface User {
 })
 export class NestedUserControls {
   readonly parentForm = input.required<Field<EmployeeFormState, string | number>>();
+  readonly emailRequired = computed(() => this.parentForm().user.email().errorSummary().some(error => error.kind == 'required'));
 }

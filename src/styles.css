@@ -42,7 +42,7 @@ form {
     gap: 1em;
 }
 
-:has(small) > input {
+:has(small.error) > input {
     border: 2px solid red;
 }
 

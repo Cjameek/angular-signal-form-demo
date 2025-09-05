@@ -17,7 +17,7 @@ export interface Address {
   <div>
     <p><strong>Address Information</strong></p>
     <fieldset>
-      <label for="street">Street</label>
+      <label for="street">Street <small>(Required)</small></label>
       <input id="street" type="text" [control]="parentForm().address.street" />
       @if(parentForm().address.street().errors().length > 0 && parentForm().address.street().touched()){
         @for(error of parentForm().address.street().errors(); track $index) {
