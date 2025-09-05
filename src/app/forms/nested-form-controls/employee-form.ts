@@ -1,8 +1,9 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { form, Control, schema, required, pattern, maxLength, validate, customError } from '@angular/forms/signals';
+import { form, Control, apply } from '@angular/forms/signals';
 import { User, NestedUserControls } from './user-controls';
 import { Address, NestedAddressControls } from './address-controls';
+import { employeeFormSchema, userSchema, addressSchema } from './schema';
 
 export interface EmployeeFormState {
   employeeID: string | null,
@@ -11,19 +12,6 @@ export interface EmployeeFormState {
   address?: Address,
 }
 
-const employeeFormSchema = schema<EmployeeFormState>((path) => {
-  required(path.user.firstName, { message: 'First name is required' }),
-  maxLength(path.user.firstName, 150)
-  required(path.user.lastName, { message: 'Last name is required' }),
-  maxLength(path.user.lastName, 150)
-  required(path.user.email, { when: ({ valueOf }) => valueOf(path.requireEmail), message: 'Email is required' }),
-  pattern(path.user.email, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, { message: 'Must be valid email format'}),
-  required(path.address.street, { message: "Street is required" }),
-  validate(path, ({ value }) => 
-    value().user.firstName == value().user.lastName ? [customError({ kind: 'disallowed', message: 'Last name and first name cannot match' })] : []
-  )
-});
-
 @Component({
   selector: 'nested-employee-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,8 +19,13 @@ const employeeFormSchema = schema<EmployeeFormState>((path) => {
   <form>
 
     <fieldset>
-      <label for="employeeID">Employee ID #</label>
-      <input id="employeeID" type="text" [control]="employeeForm.employeeID" />
+      <label for="employeeID">Employee ID # <small>(Required)</small></label>
+      <input id="employeeID" type="text" [control]="employeeForm.employeeID" inputmode="numeric" pattern="[0-9]*" />
+      @if(employeeForm.employeeID().errors().length > 0 && employeeForm.employeeID().touched()){
+        @for(error of employeeForm.employeeID().errors(); track $index) {
+          <small class="error">{{ error.message }}</small>
+        }
+      }
     </fieldset>
 
     <div>
@@ -79,7 +72,11 @@ export class NestedEmployeeForm {
     }
   });
 
-  employeeForm = form(this.state, employeeFormSchema);
+  readonly employeeForm = form(this.state, (profile) => {
+    apply(profile, employeeFormSchema),
+    apply(profile.user, userSchema),
+    apply(profile.address, addressSchema)
+  });
 
   toggleMiddleInitial(): void {
     if('middleInitial' in this.state().user){

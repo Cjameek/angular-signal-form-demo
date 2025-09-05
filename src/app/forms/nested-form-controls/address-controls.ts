@@ -26,16 +26,31 @@ export interface Address {
       }
     </fieldset>
     <fieldset>
-      <label for="city">City</label>
+      <label for="city">City <small>(Required)</small></label>
       <input id="city" type="text" [control]="parentForm().address.city" />
+      @if(parentForm().address.city().errors().length > 0 && parentForm().address.city().touched()){
+        @for(error of parentForm().address.city().errors(); track $index) {
+          <small class="error">{{ error.message }}</small>
+        }
+      }
     </fieldset>
     <fieldset>
-      <label for="state">State</label>
+      <label for="state">State <small>(Required)</small></label>
       <input id="state" type="text" [control]="parentForm().address.state" />
+      @if(parentForm().address.state().errors().length > 0 && parentForm().address.state().touched()){
+        @for(error of parentForm().address.state().errors(); track $index) {
+          <small class="error">{{ error.message }}</small>
+        }
+      }
     </fieldset>
     <fieldset>
-      <label for="zip">Zip</label>
+      <label for="zip">Zip <small>(Required)</small></label>
       <input id="zip" type="text" [control]="parentForm().address.zip" />
+      @if(parentForm().address.zip().errors().length > 0 && parentForm().address.zip().touched()){
+        @for(error of parentForm().address.zip().errors(); track $index) {
+          <small class="error">{{ error.message }}</small>
+        }
+      }
     </fieldset>
   </div>
   `,
