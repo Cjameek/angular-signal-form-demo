@@ -17,7 +17,6 @@ export interface EmployeeFormState {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <form>
-
     <fieldset>
       <label for="employeeID">Employee ID # <small>(Required)</small></label>
       <input id="employeeID" type="text" [control]="employeeForm.employeeID" inputmode="numeric" pattern="[0-9]*" />
@@ -56,6 +55,7 @@ export interface EmployeeFormState {
 
     <pre>
       Value: {{ employeeForm().value() | json }}
+      Valid: {{ employeeForm().valid() | json }}
     </pre>
   </form>
   `,
