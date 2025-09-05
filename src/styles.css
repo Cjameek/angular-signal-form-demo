@@ -1,1 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    font-family: 'Raleway', sans-serif;
+}
+form {
+    max-width: 400px;
+
+    label {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    fieldset {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4em;
+        border: none;
+        margin-block: 1em;
+        padding: 0;
+    }
+
+    input {
+      padding: 6px;  
+    }
+
+    small.error {
+        color: red;
+        font-size: 12px;
+        font-weight: 500;
+    }
+}
+
+
+:has(small) > input {
+    border: 2px solid red;
+}

@@ -19,9 +19,9 @@ export interface Address {
     <fieldset>
       <label for="street">Street</label>
       <input id="street" type="text" [control]="parentForm().address.street" />
-      @if(parentForm().address.street().errors() && parentForm().address.street()){
+      @if(parentForm().address.street().errors().length > 0 && parentForm().address.street().touched()){
         @for(error of parentForm().address.street().errors(); track $index) {
-          <small>{{ error.message }}</small>
+          <small class="error">{{ error.message }}</small>
         }
       }
     </fieldset>

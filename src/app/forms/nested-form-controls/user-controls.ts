@@ -15,30 +15,31 @@ export interface User {
   template: `
   <div>
     <p><strong>User Information</strong></p>
+
     <fieldset>
       <label for="firstName">First Name</label>
       <input id="firstName" type="text" [control]="parentForm().user.firstName" />
-      @if(parentForm().user.firstName().errors() && parentForm().user.firstName().touched()){
+      @if(parentForm().user.firstName().errors().length > 0 && parentForm().user.firstName().touched()){
         @for(error of parentForm().user.firstName().errors(); track $index) {
-          <small>{{ error.message }}</small>
+          <small class="error">{{ error.message }}</small>
         }
       }
     </fieldset>
     <fieldset>
       <label for="lastName">Last Name</label>
       <input id="lastName" type="text" [control]="parentForm().user.lastName" />
-      @if(parentForm().user.lastName().errors() && parentForm().user.lastName().touched()){
+      @if(parentForm().user.lastName().errors().length > 0 && parentForm().user.lastName().touched()){
         @for(error of parentForm().user.lastName().errors(); track $index) {
-          <small>{{ error.message }}</small>
+          <small class="error">{{ error.message }}</small>
         }
       }
     </fieldset>
     <fieldset>
       <label for="email">Email</label>
       <input id="email" type="email" [control]="parentForm().user.email" />
-      @if(parentForm().user.email().errors() && parentForm().user.email()){
+      @if(parentForm().user.email().errors().length > 0 && parentForm().user.email()){
         @for(error of parentForm().user.email().errors(); track $index) {
-          <small>{{ error.message }}</small>
+          <small class="error">{{ error.message }}</small>
         }
       }
     </fieldset>
