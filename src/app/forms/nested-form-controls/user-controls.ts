@@ -5,7 +5,7 @@ import { EmployeeFormState } from './employee-form';
 export interface User {
   firstName: string,
   lastName: string,
-  middleInitial?: string,
+  middleInitial: string,
   email: string
 }
 
@@ -36,7 +36,7 @@ export interface User {
       }
     </fieldset>
 
-    @if(form().user.middleInitial){
+    @if(!form().user.middleInitial().hidden()){
       <fieldset>
         <label for="middleInitial">Middle Initial</label>
         <input id="middleInitial" type="text" [control]="form().user.middleInitial" />

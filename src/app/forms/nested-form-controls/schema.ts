@@ -1,4 +1,4 @@
-import { schema, required, pattern, maxLength, email, validate, customError } from "@angular/forms/signals";
+import { schema, required, pattern, maxLength, email, validate, customError, hidden } from "@angular/forms/signals";
 import { Address } from "./address-controls";
 import { EmployeeFormState } from "./employee-form";
 import { User } from "./user-controls";
@@ -13,7 +13,13 @@ export const employeeFormSchema = schema<EmployeeFormState>((path) => {
   required(path.user.email, { when: ({ valueOf }) => valueOf(path.requireEmail), message: 'Email is required' }),
   validate(path, ({ value }) => 
     value().user.firstName.toUpperCase() == value().user.lastName.toUpperCase() ? [customError({ kind: 'disallowSameName', message: 'Last name and first name cannot match' })] : []
-  )
+  ),
+  hidden(path.address, (c) => {
+    return c.valueOf(path.showAddress) == false;
+  }),
+  hidden(path.user.middleInitial, (c) => {
+    return c.valueOf(path.showMiddleInitial) == false;
+  })
 });
 
 /**

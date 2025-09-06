@@ -6,10 +6,12 @@ import { Address, NestedAddressControls } from './address-controls';
 import { employeeFormSchema, userSchema, addressSchema } from './schema';
 
 export interface EmployeeFormState {
-  employeeID: string | null,
+  showMiddleInitial: boolean, // Only added to state to handle hidden logic toggling
+  showAddress: boolean, // Only added to state to handle hidden logic toggling
+  employeeID: string,
   requireEmail: boolean,
   user: User,
-  address?: Address,
+  address: Address,
 }
 
 @Component({
@@ -40,7 +42,7 @@ export interface EmployeeFormState {
     <section class="controls">
       <nested-user-controls [form]="employeeForm" />
   
-      @if(state().address){
+      @if(!employeeForm.address().hidden()){
         <nested-address-controls [form]="employeeForm" />
       }
     </section>
@@ -77,48 +79,21 @@ export class NestedEmployeeForm {
   });
 
   toggleMiddleInitial(): void {
-    if('middleInitial' in this.state().user){
-      const {middleInitial, ...newUser} = this.state().user as User;
+    const val = !this.state().showMiddleInitial;
 
-      const updatedState = {
-        ...this.state(),
-        user: newUser
-      } as EmployeeFormState;
-
-      this.state.set(updatedState);
-    } else {
-      const newUser = {
-        ...this.state().user,
-        middleInitial: ''
-      } as User;
-
-      const updatedState = {
-        ...this.state(),
-        user: newUser
-      } as EmployeeFormState;
-      
-      this.state.set(updatedState);
-    }
+    this.state.set({
+      ...this.state(),
+      showMiddleInitial: val
+    });
   }
 
   toggleAddress(): void {
-    if('address' in this.state()){
-      const { address, ...updatedState } = this.state() as EmployeeFormState;
+    const val = !this.state().showAddress;
 
-      this.state.set(updatedState);
-    } else {
-      const updatedState = {
-        ...this.state(),
-        address: {
-          street: '',
-          city: '',
-          state: '',
-          zip: ''
-        }
-      } as EmployeeFormState;
-      
-      this.state.set(updatedState);
-    }
+    this.state.set({
+      ...this.state(),
+      showAddress: val
+    });
   }
 
   submitEmployee(e: SubmitEvent): void {
@@ -145,12 +120,21 @@ export class NestedEmployeeForm {
 
   private createNewState(): EmployeeFormState {
     return {
-      employeeID: null,
+      showMiddleInitial: false,
+      showAddress: false,
+      employeeID: '',
       requireEmail: false,
       user: {
         firstName: '',
         lastName: '',
-        email: ''
+        email: '',
+        middleInitial: ''
+      },
+      address: {
+        street: '',
+        city: '',
+        state: '',
+        zip: ''
       }
     }
   }
