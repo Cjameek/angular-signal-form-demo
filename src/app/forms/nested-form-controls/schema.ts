@@ -8,10 +8,11 @@ import { User } from "./user-controls";
  */
 export const employeeFormSchema = schema<EmployeeFormState>((path) => {
   required(path.employeeID, { message: 'Employee ID is required'}),
-  pattern(path.employeeID, /^[0-9]*$/, { message: 'Only numbers allowed' }),
+  pattern(path.employeeID, /^[0-9]*$/, { message: 'Non-numeric characters not allowed.' }),
+  maxLength(path.employeeID, 10, { message: "Only 10 characters allowed." }),
   required(path.user.email, { when: ({ valueOf }) => valueOf(path.requireEmail), message: 'Email is required' }),
   validate(path, ({ value }) => 
-    value().user.firstName == value().user.lastName ? [customError({ kind: 'disallowed', message: 'Last name and first name cannot match' })] : []
+    value().user.firstName.toUpperCase() == value().user.lastName.toUpperCase() ? [customError({ kind: 'disallowed', message: 'Last name and first name cannot match' })] : []
   )
 });
 
