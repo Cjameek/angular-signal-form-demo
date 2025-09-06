@@ -18,9 +18,9 @@ export interface User {
 
     <fieldset>
       <label for="firstName">First Name <small>(Required)</small></label>
-      <input id="firstName" type="text" [control]="form().user.firstName" />
-      @if(form().user.firstName().errors().length > 0 && form().user.firstName().touched()){
-        @for(error of form().user.firstName().errors(); track $index) {
+      <input id="firstName" type="text" [control]="field().firstName" />
+      @if(field().firstName().errors().length > 0 && field().firstName().touched()){
+        @for(error of field().firstName().errors(); track $index) {
           <small class="error">{{ error.message }}</small>
         }
       }
@@ -28,26 +28,26 @@ export interface User {
     
     <fieldset>
       <label for="lastName">Last Name <small>(Required)</small></label>
-      <input id="lastName" type="text" [control]="form().user.lastName" />
-      @if(form().user.lastName().errors().length > 0 && form().user.lastName().touched()){
-        @for(error of form().user.lastName().errors(); track $index) {
+      <input id="lastName" type="text" [control]="field().lastName" />
+      @if(field().lastName().errors().length > 0 && field().lastName().touched()){
+        @for(error of field().lastName().errors(); track $index) {
           <small class="error">{{ error.message }}</small>
         }
       }
     </fieldset>
 
-    @if(!form().user.middleInitial().hidden()){
+    @if(!field().middleInitial().hidden()){
       <fieldset>
         <label for="middleInitial">Middle Initial</label>
-        <input id="middleInitial" type="text" [control]="form().user.middleInitial" />
+        <input id="middleInitial" type="text" [control]="field().middleInitial" />
       </fieldset>
     }
 
     <fieldset>
       <label for="email">Email @if(emailRequired()){ <small>(Required)</small> }</label>
-      <input id="email" type="email" [control]="form().user.email" />
-      @if(form().user.email().errors().length > 0 && form().user.email()){
-        @for(error of form().user.email().errors(); track $index) {
+      <input id="email" type="email" [control]="field().email" />
+      @if(field().email().errors().length > 0 && field().email()){
+        @for(error of field().email().errors(); track $index) {
           <small class="error">{{ error.message }}</small>
         }
       }
@@ -57,6 +57,6 @@ export interface User {
   imports: [Control],
 })
 export class NestedUserControls {
-  readonly form = input.required<Field<EmployeeFormState, string | number>>();
-  readonly emailRequired = computed(() => this.form().user.email().errorSummary().some(error => error.kind == 'required'));
+  readonly field = input.required<Field<User, string | number>>();
+  readonly emailRequired = computed(() => this.field().email().errorSummary().some(error => error.kind == 'required'));
 }

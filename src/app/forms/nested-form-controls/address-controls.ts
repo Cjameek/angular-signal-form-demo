@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { Control, Field } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Control, Field, FieldState } from '@angular/forms/signals';
 import { EmployeeFormState } from './employee-form';
 
 export interface Address {
@@ -18,36 +18,36 @@ export interface Address {
     <p><strong>Address Information</strong></p>
     <fieldset>
       <label for="street">Street <small>(Required)</small></label>
-      <input id="street" type="text" [control]="form().address.street" />
-      @if(form().address.street().errors().length > 0 && form().address.street().touched()){
-        @for(error of form().address.street().errors(); track $index) {
+      <input id="street" type="text" [control]="field().street" />
+      @if(field().street().errors().length > 0 && field().street().touched()){
+        @for(error of field().street().errors(); track $index) {
           <small class="error">{{ error.message }}</small>
         }
       }
     </fieldset>
     <fieldset>
       <label for="city">City <small>(Required)</small></label>
-      <input id="city" type="text" [control]="form().address.city" />
-      @if(form().address.city().errors().length > 0 && form().address.city().touched()){
-        @for(error of form().address.city().errors(); track $index) {
+      <input id="city" type="text" [control]="field().city" />
+      @if(field().city().errors().length > 0 && field().city().touched()){
+        @for(error of field().city().errors(); track $index) {
           <small class="error">{{ error.message }}</small>
         }
       }
     </fieldset>
     <fieldset>
       <label for="state">State <small>(Required)</small></label>
-      <input id="state" type="text" [control]="form().address.state" />
-      @if(form().address.state().errors().length > 0 && form().address.state().touched()){
-        @for(error of form().address.state().errors(); track $index) {
+      <input id="state" type="text" [control]="field().state" />
+      @if(field().state().errors().length > 0 && field().state().touched()){
+        @for(error of field().state().errors(); track $index) {
           <small class="error">{{ error.message }}</small>
         }
       }
     </fieldset>
     <fieldset>
       <label for="zip">Zip <small>(Required)</small></label>
-      <input id="zip" type="text" [control]="form().address.zip" />
-      @if(form().address.zip().errors().length > 0 && form().address.zip().touched()){
-        @for(error of form().address.zip().errors(); track $index) {
+      <input id="zip" type="text" [control]="field().zip" />
+      @if(field().zip().errors().length > 0 && field().zip().touched()){
+        @for(error of field().zip().errors(); track $index) {
           <small class="error">{{ error.message }}</small>
         }
       }
@@ -57,5 +57,5 @@ export interface Address {
   imports: [Control],
 })
 export class NestedAddressControls {
-  readonly form = input.required<Field<EmployeeFormState, string | number>>();
+  readonly field = input.required<Field<Address, string>>();
 }

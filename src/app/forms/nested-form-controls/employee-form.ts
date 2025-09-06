@@ -40,10 +40,10 @@ export interface EmployeeFormState {
     </div>
 
     <section class="controls">
-      <nested-user-controls [form]="employeeForm" />
+      <nested-user-controls [field]="employeeForm.user" />
   
       @if(!employeeForm.address().hidden()){
-        <nested-address-controls [form]="employeeForm" />
+        <nested-address-controls [field]="employeeForm.address" />
       }
     </section>
 
