@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { Control, Field, FieldState } from '@angular/forms/signals';
-import { EmployeeFormState } from './employee-form';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Control, Field } from '@angular/forms/signals';
 
 export interface Address {
   street: string,
