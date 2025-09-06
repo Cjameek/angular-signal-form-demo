@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { Control, Field } from '@angular/forms/signals';
-import { EmployeeFormState } from './employee-form';
+import { Control, Field, REQUIRED } from '@angular/forms/signals';
 
 export interface User {
   firstName: string,
@@ -58,5 +57,5 @@ export interface User {
 })
 export class NestedUserControls {
   readonly field = input.required<Field<User, string | number>>();
-  readonly emailRequired = computed(() => this.field().email().errorSummary().some(error => error.kind == 'required'));
+  readonly emailRequired = computed(() => this.field().email().property(REQUIRED)());
 }
