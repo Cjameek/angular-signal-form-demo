@@ -38,10 +38,10 @@ export interface EmployeeFormState {
     </div>
 
     <section class="controls">
-      <nested-user-controls [parentForm]="employeeForm" />
+      <nested-user-controls [form]="employeeForm" />
   
       @if(state().address){
-        <nested-address-controls [parentForm]="employeeForm" />
+        <nested-address-controls [form]="employeeForm" />
       }
     </section>
 
