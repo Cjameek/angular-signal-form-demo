@@ -12,7 +12,7 @@ export const employeeFormSchema = schema<EmployeeFormState>((path) => {
   maxLength(path.employeeID, 10, { message: "Only 10 characters allowed." }),
   required(path.user.email, { when: ({ valueOf }) => valueOf(path.requireEmail), message: 'Email is required' }),
   validate(path, ({ value }) => 
-    value().user.firstName.toUpperCase() == value().user.lastName.toUpperCase() ? [customError({ kind: 'disallowed', message: 'Last name and first name cannot match' })] : []
+    value().user.firstName.toUpperCase() == value().user.lastName.toUpperCase() ? [customError({ kind: 'disallowSameName', message: 'Last name and first name cannot match' })] : []
   )
 });
 
@@ -23,7 +23,10 @@ export const userSchema = schema<User>((path) => {
   required(path.firstName, { message: 'First name is required' }),
   maxLength(path.firstName, 150)
   required(path.lastName, { message: 'Last name is required' }),
-  maxLength(path.lastName, 150)
+  maxLength(path.lastName, 150),
+  maxLength(path.middleInitial, 1, {
+    message: 'Middle initial can only be 1 character',
+  }),
   email(path.email, { message: 'Must be valid email format'})
 });
 

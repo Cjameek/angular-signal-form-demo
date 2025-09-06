@@ -16,7 +16,7 @@ export interface EmployeeFormState {
   selector: 'nested-employee-form',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-  <aside>
+  <aside class="buttons">
     <button type="button" (click)="toggleAddress()">Toggle Address Fields</button>
     <button type="button" (click)="toggleMiddleInitial()">Toggle Middle Initial Field</button>
   </aside>
@@ -48,7 +48,7 @@ export interface EmployeeFormState {
     @if(employeeForm().errors().length > 0 && employeeForm().touched()){
       <ul>
         @for(error of employeeForm().errors(); track $index) {
-          <li><small class="error">{{ error.message }}</small></li>
+          <li><small class="error" [class]="'kind-' + error.kind">{{ error.message }}</small></li>
         }
       </ul>
     }
