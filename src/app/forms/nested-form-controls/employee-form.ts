@@ -1,13 +1,11 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { form, Control, apply, submit, Field } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
+import { form, Control, apply, submit, Field, hidden } from '@angular/forms/signals';
 import { User, NestedUserControls } from './user-controls';
 import { Address, NestedAddressControls } from './address-controls';
 import { employeeFormSchema, userSchema, addressSchema } from './schema';
 
 export interface EmployeeFormState {
-  showMiddleInitial: boolean, // Only added to state to handle hidden logic toggling
-  showAddress: boolean, // Only added to state to handle hidden logic toggling
   employeeID: string,
   requireEmail: boolean,
   user: User,
@@ -19,8 +17,8 @@ export interface EmployeeFormState {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <aside class="buttons">
-    <button type="button" (click)="toggleAddress()">Toggle Address Fields</button>
-    <button type="button" (click)="toggleMiddleInitial()">Toggle Middle Initial Field</button>
+    <button type="button" (click)="hideAddress.set(!hideAddress())">Toggle Address Fields</button>
+    <button type="button" (click)="hideMiddleInitial.set(!hideMiddleInitial())">Toggle Middle Initial Field</button>
   </aside>
 
   <form (submit)="submitEmployee($event)">
@@ -71,30 +69,20 @@ export interface EmployeeFormState {
 })
 export class NestedEmployeeForm {
   readonly state = signal<EmployeeFormState>(this.createNewState());
+  readonly hideAddress = model<boolean>(true);
+  readonly hideMiddleInitial = model<boolean>(true);
 
-  readonly employeeForm = form(this.state, (profile) => {
-    apply(profile, employeeFormSchema),
-    apply(profile.user, userSchema),
-    apply(profile.address, addressSchema)
+  readonly employeeForm = form(this.state, (path) => {
+    apply(path, employeeFormSchema),
+    apply(path.user, userSchema),
+    apply(path.address, addressSchema),
+    hidden(path.address, () => {
+      return this.hideAddress();
+    }),
+    hidden(path.user.middleInitial, () => {
+      return this.hideMiddleInitial();
+    })
   });
-
-  toggleMiddleInitial(): void {
-    const val = !this.state().showMiddleInitial;
-
-    this.state.set({
-      ...this.state(),
-      showMiddleInitial: val
-    });
-  }
-
-  toggleAddress(): void {
-    const val = !this.state().showAddress;
-
-    this.state.set({
-      ...this.state(),
-      showAddress: val
-    });
-  }
 
   submitEmployee(e: SubmitEvent): void {
     if(this.employeeForm().invalid()) return;
@@ -120,8 +108,6 @@ export class NestedEmployeeForm {
 
   private createNewState(): EmployeeFormState {
     return {
-      showMiddleInitial: false,
-      showAddress: false,
       employeeID: '',
       requireEmail: false,
       user: {

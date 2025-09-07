@@ -13,13 +13,7 @@ export const employeeFormSchema = schema<EmployeeFormState>((path) => {
   required(path.user.email, { when: ({ valueOf }) => valueOf(path.requireEmail), message: 'Email is required' }),
   validate(path, ({ value }) => 
     value().user.firstName.toUpperCase() == value().user.lastName.toUpperCase() ? [customError({ kind: 'disallowSameName', message: 'Last name and first name cannot match' })] : []
-  ),
-  hidden(path.address, (c) => {
-    return c.valueOf(path.showAddress) == false;
-  }),
-  hidden(path.user.middleInitial, (c) => {
-    return c.valueOf(path.showMiddleInitial) == false;
-  })
+  )
 });
 
 /**
