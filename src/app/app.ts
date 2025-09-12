@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { httpResource } from '@angular/common/http';
 
 import { EmployeeFormState, NestedEmployeeForm } from './forms/nested-form-controls/employee-form';
@@ -14,10 +13,8 @@ const API_URL = "https://dummyjson.com/c/509a-b344-48ed-b26e";
 
     <!-- Simulate passing API data down to Signal Form component --> 
     <nested-employee-form [employeeData]="apiRes.value()" />
-  </main>
-
-  <router-outlet />`,
-  imports: [RouterOutlet, NestedEmployeeForm],
+  </main>`,
+  imports: [NestedEmployeeForm],
 })
 export class App {
   readonly apiRes = httpResource<EmployeeFormState>(() => API_URL);
