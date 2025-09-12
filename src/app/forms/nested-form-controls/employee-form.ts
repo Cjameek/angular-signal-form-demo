@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, linkedSignal, model } from '@angular/core';
 import { form, Control, apply, submit, Field, hidden } from '@angular/forms/signals';
 import { User, NestedUserControls } from './user-controls';
 import { Address, NestedAddressControls } from './address-controls';
@@ -68,11 +68,18 @@ export interface EmployeeFormState {
   imports: [Control, JsonPipe, NestedUserControls, NestedAddressControls],
 })
 export class NestedEmployeeForm {
-  readonly state = signal<EmployeeFormState>(this.createNewState());
+  /** Can receive employee data via input binding to populate the form from an API or other source */
+  readonly employeeData = input<EmployeeFormState>();
+  
+  /** The form state is either populated from the input employeeData or a new blank state is created */
+  readonly formState = linkedSignal<EmployeeFormState>(() => this.employeeData() ?? this.createNewState());
+
+  /** Controls to toggle hiding address section and middle initial field */
   readonly hideAddress = model<boolean>(true);
   readonly hideMiddleInitial = model<boolean>(true);
 
-  readonly employeeForm = form(this.state, (path) => {
+  /** The main employee form, applying the various schemas and hidden states */
+  readonly employeeForm = form(this.formState, (path) => {
     apply(path, employeeFormSchema),
     apply(path.user, userSchema),
     apply(path.address, addressSchema),
@@ -103,7 +110,7 @@ export class NestedEmployeeForm {
   }
 
   private resetFormState(newState: EmployeeFormState): void {
-    this.state.set(newState);
+    this.formState.set(newState);
   }
 
   private createNewState(): EmployeeFormState {
